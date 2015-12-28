@@ -53,12 +53,18 @@ MethodHooks._wrappers = {};
  * Initializes a new hook
  * @param mapping {{}<String, [Hook]>} A place to store the mapping
  * @param methodName {String} The name of the method
- * @param hookFunction {function} The hook function
+ * @param hookFunction {function} or {array} The hook function(s)
  * @private
  */
 MethodHooks._initializeHook = function (mapping, methodName, hookFunction) {
     mapping[methodName] = mapping[methodName] || [];
-    mapping[methodName].push(hookFunction);
+
+    // Accepts a function or an array of functions
+    if (_.isArray(hookFunction)) {
+      mapping[methodName] = mapping[methodName].concat(hookFunction);
+    }else {
+      mapping[methodName].push(hookFunction)
+    }
 
     // Initialize a wrapper for the given method name. Idempotent, it will not erase existing handlers.
     var method = MethodHooks._handlers[methodName];
@@ -161,4 +167,3 @@ MethodHooks.afterMethods = function (dict) {
         MethodHooks.after(k, v);
     });
 };
-
