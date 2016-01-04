@@ -143,22 +143,36 @@ MethodHooks.after = function (methodName, afterFunction) {
     MethodHooks._initializeHook(MethodHooks._afterHooks, methodName, afterFunction);
 };
 /**
- * Call the provided hook in values for the key'd method names
- * @param dict {Object.<string, Hook>}
+ * Call the provided hook in values for the key'd method names or the array of method names
+ * @param dictOrArray {(Object.<string, Hook>|string[])}
+ * @param hook {[Hook]}
  */
-MethodHooks.beforeMethods = function (dict) {
-    _.each(dict, function (v, k) {
-        MethodHooks.before(k, v);
-    });
+MethodHooks.beforeMethods = function (dictOrArray, hook) {
+    if (dictOrArray instanceof Array) {
+        _.each(dict, function (v) {
+            MethodHooks.before(k, hook);
+        });
+    } else {
+        _.each(dict, function (v, k) {
+            MethodHooks.before(k, v);
+        });
+    }
 };
 
 /**
- * Call the provided hook in values for the key'd method names
- * @param dict {Object.<string, Hook>}
+ * Call the provided hook in values for the key'd method names or the array of method names
+ * @param dictOrArray {(Object.<string, Hook>|string[])}
+ * @param hook {[Hook]}
  */
-MethodHooks.afterMethods = function (dict) {
-    _.each(dict, function (v, k) {
-        MethodHooks.after(k, v);
-    });
+MethodHooks.afterMethods = function (dictOrArray, hook) {
+    if (dictOrArray instanceof Array) {
+        _.each(dict, function (v) {
+            MethodHooks.after(k, hook);
+        });
+    } else {
+        _.each(dict, function (v, k) {
+            MethodHooks.after(k, v);
+        });
+    }
 };
 
