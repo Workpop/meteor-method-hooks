@@ -72,12 +72,14 @@ MethodHooks._initializeHook = function (mapping, methodName, hookFunction) {
     MethodHooks._originalMethodHandlers[methodName] = method;
 
     MethodHooks._wrappers[methodName] = function () {
+        // Save `this` variable
+        var self = this;
         // Get arguments you can mutate
         var args = _.toArray(arguments);
         // Call the before hooks
         var beforeHooks = MethodHooks._beforeHooks[methodName];
         _.each(beforeHooks, function (beforeHook, hooksProcessed) {
-            beforeHook.call(this, {
+            beforeHook.call(self, {
                 result: undefined,
                 error: undefined,
                 arguments: args,
@@ -99,7 +101,7 @@ MethodHooks._initializeHook = function (mapping, methodName, hookFunction) {
         // Call after hooks, providing the result and the original arguments
         var afterHooks = MethodHooks._afterHooks[methodName];
         _.each(afterHooks, function (afterHook, hooksProcessed) {
-            var hookResult = afterHook.call(this, {
+            var hookResult = afterHook.call(self, {
                 result: methodResult,
                 error: methodError,
                 arguments: args,
